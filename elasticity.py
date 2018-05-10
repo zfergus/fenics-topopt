@@ -26,10 +26,13 @@ g = gamma
 
 # Create mesh and define function space
 mesh = BoxMesh(Point(0, 0, 0), Point(L, W, W), 10, 3, 3)
+from mshr import *
+domain = Surface3D("bridge_flat.stl")
+mesh = generate_mesh(domain, 20)
 V = VectorFunctionSpace(mesh, 'P', 1)
 
 # Define boundary condition
-tol = 1E-14
+tol = 1e-8
 
 
 def clamped_boundary(x, on_boundary):
@@ -76,13 +79,14 @@ u_magnitude = sqrt(dot(u, u))
 u_magnitude = project(u_magnitude, V)
 plot(u_magnitude, 'Displacement magnitude')
 print('min/max u:',
-      u_magnitude.vector().array().min(),
-      u_magnitude.vector().array().max())
+      u_magnitude.vector().get_local().min(),
+      u_magnitude.vector().get_local().max())
 
 # Save solution to file in VTK format
+# import pdb; pdb.set_trace()
 File('elasticity/displacement.pvd') << u
 File('elasticity/von_mises.pvd') << von_Mises
 File('elasticity/magnitude.pvd') << u_magnitude
 
 # Hold plot
-plt.show()
+# plt.show()
