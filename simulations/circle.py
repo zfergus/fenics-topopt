@@ -2,9 +2,9 @@ from __future__ import print_function, division
 from fenics import *
 import mshr
 
-from linear_elasticity import linear_elasticity
-from von_Mises_stress import von_Mises_stress
-from utils import scale_mesh
+from elasticity.linear_elasticity import linear_elasticity
+from elasticity.von_Mises_stress import von_Mises_stress
+from elasticity.utils import scale_mesh
 
 
 def main():

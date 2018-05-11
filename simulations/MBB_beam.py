@@ -2,9 +2,9 @@ from __future__ import print_function, division
 from fenics import *
 import mshr
 
-from linear_elasticity import linear_elasticity
-from von_Mises_stress import von_Mises_stress
-from utils import scale_mesh
+from elasticity.linear_elasticity import linear_elasticity
+from elasticity.von_Mises_stress import von_Mises_stress
+from elasticity.utils import scale_mesh
 
 
 def main():
@@ -31,13 +31,13 @@ def main():
         def inside(self, x, on_boundary):
             return ((near(x[0], 0.1, 10) or near(x[0], width - 0.1, 10)) and
                 near(x[1], 0, tol))
-            # return near(x[1], 0, tol)
     gamma_bottom = BottomBoundary()
 
     class PointLoad(SubDomain):
         """ Add a point load to the top center. """
         def inside(self, x, on_boundary):
-            return near(x[0], width / 2.0, width / 50) and near(x[1], height, tol)
+            return (near(x[0], width / 2.0, width / 50) and
+                near(x[1], height, tol))
     gamma_point = PointLoad()
     gamma_point.mark(boundary_parts, 2)
 
