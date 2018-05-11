@@ -30,6 +30,8 @@ class LessTolerantSolver(Solver):
         self.opt.set_maxeval(4000)
         self.opt.set_ftol_rel(0.0001)
 
+# BoundaryConditions = topopt.boundary_conditions.BoundaryConditions
+
 
 class BoundaryConditions(topopt.boundary_conditions.BoundaryConditions):
     def get_forces(self):
