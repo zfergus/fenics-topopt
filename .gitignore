@@ -136,3 +136,5 @@ Temporary Items
 ###############################################################################
 # My files
 FEniCS.pdf
+# simulations/output/
+images/camera/raw
