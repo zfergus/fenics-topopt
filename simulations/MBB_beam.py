@@ -13,7 +13,7 @@ def main():
     delta = width / height
 
     # Create the mesh to solve linear elasticity on.
-    mesh = Mesh("meshes/bridge.xml")
+    mesh = Mesh("meshes/bridge2.xml")
 
     scale_mesh(mesh, width, height)
 
@@ -24,35 +24,34 @@ def main():
     boundary_parts.set_all(0)
 
     # Tolarance of boundary near checks.
-    tol = 2e-4
+    tol = 5e-2
 
     class BottomBoundary(SubDomain):
         """ Constrain the bottom to not move. """
         def inside(self, x, on_boundary):
-            return ((near(x[0], 0.1, 10) or near(x[0], width - 0.1, 10)) and
+            return ((near(x[0], 0.1, 2e1) or near(x[0], width - 0.1, 2e1)) and
                 near(x[1], 0, tol))
     gamma_bottom = BottomBoundary()
 
     class PointLoad(SubDomain):
         """ Add a point load to the top center. """
         def inside(self, x, on_boundary):
-            return (near(x[0], width / 2.0, width / 50) and
+            return (near(x[0], width / 2.0, width / 4) and
                 near(x[1], height, tol))
     gamma_point = PointLoad()
     gamma_point.mark(boundary_parts, 2)
 
     B = Constant((0.0, 0.0)) # Body force per unit volume
-    T = Constant((0.0, delta * 0)) # Point load on the boundary
+    T = Constant((0.0, -2e0)) # Point load on the boundary
 
     # Boundary conditions on the subdomains
-    bct = DirichletBC(V, Constant((0.0, 0.0)), gamma_bottom, method="pointwise")
-    bcp = DirichletBC(V, T, gamma_point, method="pointwise")
-    bcs = [bct, bcp]
+    bct = DirichletBC(V, Constant((0.0, 0.0)), gamma_bottom)
+    bcs = [bct]
 
-    dss = ds(subdomain_data=boundary_parts)
+    dss = ds(domain=mesh, subdomain_data=boundary_parts)
     L = lambda v: dot(B, v) * dx + dot(T, v) * dss(2)
 
-    u = linear_elasticity(V, L, bcs)
+    u = linear_elasticity(V, L, bcs, E=1e3)
     File("output/MBB/displacement.pvd") << u
 
     # Compute magnitude of displacement

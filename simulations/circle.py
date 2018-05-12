@@ -18,57 +18,48 @@ def main():
     boundary_parts.set_all(0)
 
     # Tolarance of boundary near checks.
-    tol = 2e-4
+    tol = 5e-2
 
     class TopLoad(SubDomain):
         """ Constrain the bottom to not move. """
         def inside(self, x, on_boundary):
-            return near(x[0], 0, 0.25) and near(x[1], 1, 1e-3)
+            return near(x[0], 0, 0.25) and near(x[1], 1, tol)
     gamma_top = TopLoad()
     gamma_top.mark(boundary_parts, 1)
 
     class BottomSupport(SubDomain):
         """ Add a point load to the top center. """
         def inside(self, x, on_boundary):
-            return near(x[1], -1, 1e-3)
+            return near(x[1], -1, tol)
     gamma_bottom = BottomSupport()
 
     B = Constant((0.0, 0.0)) # Body force per unit volume
-    T = Constant((0.0, 0)) # Point load on the top boundary
+    T = Constant((0.0, -1)) # Point load on the top boundary
 
     # Boundary conditions on the subdomains
-    bct = DirichletBC(V, T, gamma_top, method="pointwise")
-    bcb = DirichletBC(V, Constant((0, 0)), gamma_bottom, method="pointwise")
-    bcs = [bct, bcb]
+    bcb = DirichletBC(V, Constant((0, 0)), gamma_bottom)
+    bcs = [bcb]
 
-    dss = ds(subdomain_data=boundary_parts)
-    L = lambda v: dot(B, v) * dx + dot(T, v) * dss(2)
-    u = linear_elasticity(V, L, bcs)
-    File("output/circle/displacement-before.pvd") << u
+    dss = ds(domain=mesh, subdomain_data=boundary_parts)
+    L = lambda v: dot(B, v) * dx + dot(T, v) * dss(1)
 
-    T = Constant((0.0, -1e-1)) # Point load on the top boundary
-    # Boundary conditions on the subdomains
-    bct = DirichletBC(V, T, gamma_top, method="pointwise")
-    bcb = DirichletBC(V, Constant((0, 0)), gamma_bottom, method="pointwise")
-    bcs = [bct, bcb]
-
-    dss = ds(subdomain_data=boundary_parts)
-    L = lambda v: dot(B, v) * dx + dot(T, v) * dss(2)
-    u = linear_elasticity(V, L, bcs)
-    File("output/circle/displacement-after.pvd") << u
+    u = linear_elasticity(V, L, bcs, E=5e1)
 
     # Compute magnitude of displacement
     V = FunctionSpace(mesh, "P", 1)
     u_magnitude = sqrt(dot(u, u))
     u_magnitude = project(u_magnitude, V)
-    File("output/circle/magnitude.pvd") << u_magnitude
 
     print("min/max u: {:g}, {:g}".format(
         u_magnitude.vector().get_local().min(),
         u_magnitude.vector().get_local().max()))
 
+    von_Mises = von_Mises_stress(mesh, u)
+
     # Save solution to file in VTK format
-    File("output/circle/von_mises.pvd") << von_Mises_stress(mesh, u)
+    File("output/circle/displacement-after.pvd") << u
+    File("output/circle/magnitude.pvd") << u_magnitude
+    File("output/circle/von_mises.pvd") << von_Mises
 
 
 if __name__ == "__main__":

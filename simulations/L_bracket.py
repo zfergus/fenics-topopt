@@ -16,7 +16,7 @@ def main(mesh, filename_prefix):
     boundary_parts.set_all(0)
 
     # Tolarance of boundary near checks.
-    tol = 2e-4
+    tol = 5e-2
 
     class TopBoundary(SubDomain):
         """ Constrain the bottom to not move. """
@@ -32,17 +32,16 @@ def main(mesh, filename_prefix):
     gamma_point.mark(boundary_parts, 2)
 
     B = Constant((0.0, 0.0)) # Body force per unit volume
-    T = Constant((0.0, -2e-1)) # Point load on the boundary
+    T = Constant((0.0, -3e-1)) # Point load on the boundary
 
     # Boundary conditions on the subdomains
-    bct = DirichletBC(V, Constant((0.0, 0.0)), gamma_top, method="pointwise")
-    bcp = DirichletBC(V, T, gamma_point, method="pointwise")
-    bcs = [bct, bcp]
+    bct = DirichletBC(V, Constant((0.0, 0.0)), gamma_top)
+    bcs = [bct]
 
-    dss = ds(subdomain_data=boundary_parts)
+    dss = ds(domain=mesh, subdomain_data=boundary_parts)
     L = lambda v: dot(B, v) * dx + dot(T, v) * dss(2)
 
-    u = linear_elasticity(V, L, bcs)
+    u = linear_elasticity(V, L, bcs, E=1e2)
 
     # Compute magnitude of displacement
     V = FunctionSpace(mesh, "P", 1)
@@ -70,4 +69,10 @@ if __name__ == "__main__":
         Point(1, 1), Point(1 / 3., 1)])
     domain = large_quad - small_quad
     mesh = mshr.generate_mesh(domain, 30)
-    main(mesh, "")
+    main(mesh, "full-")
+    mesh = Mesh("meshes/L-bracket-v20.xml")
+    scale_mesh(mesh, 1, 1)
+    main(mesh, "topopt-v20-")
+    mesh = Mesh("meshes/L-bracket-v10.xml")
+    scale_mesh(mesh, 1, 1)
+    main(mesh, "topopt-v10-")

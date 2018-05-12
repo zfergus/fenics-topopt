@@ -8,30 +8,27 @@ def epsilon(u):
     return 0.5 * (nabla_grad(u) + nabla_grad(u).T)
 
 
-def sigma(u, lmda=1.25, mu=1):
+def sigma(u, mu=1, lmbda=1.25):
     """ Define stress. """
     d = u.geometric_dimension()
-    return lmda * nabla_div(u) * Identity(d) + 2 * mu * epsilon(u)
+    return lmbda * nabla_div(u) * Identity(d) + 2 * mu * epsilon(u)
 
 
-def linear_elasticity(V, L, bcs):
+def linear_elasticity(V, L, bcs, E=1, nu=0.3):
     """
     Solve the Linear elatic problemu using FEniCS:
         -div(sigma(u)) = f
     Solves the problem on the given mesh with the given MeshFunction for the
     boundary conditions.
     """
+    mu, lmbda = E / (2. * (1 + nu)), E * nu / ((1. + nu) * (1. - 2. * nu))
     # Define variational problem
     u = TrialFunction(V)
     d = u.geometric_dimension() # space dimension
     v = TestFunction(V)
-    a = inner(sigma(u), epsilon(v)) * dx
+    a = inner(sigma(u, mu, lmbda), epsilon(v)) * dx
     # Compute solution
     L = L(v)
-    A, b = assemble_system(a, L, bcs)
     u = Function(V)
-    U = u.vector()
-
-    # solve(a == L, u, b)
-    solve(A, U, b)
+    solve(a == L, u, bcs)
     return u
