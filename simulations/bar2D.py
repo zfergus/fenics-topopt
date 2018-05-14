@@ -27,6 +27,7 @@ mesh = RectangleMesh(Point(0, 0), Point(L, W), 10, 3)
 V = VectorFunctionSpace(mesh, 'P', 1)
 tol = 1e-2
 
+
 def clamped_boundary(x, on_boundary):
     return on_boundary and x[0] < tol
 bc = DirichletBC(V, Constant((0, 0)), clamped_boundary)
