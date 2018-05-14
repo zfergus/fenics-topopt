@@ -2,14 +2,12 @@ from __future__ import print_function, division
 from fenics import *
 import mshr
 
+from elasticity.boundary_conditions import BoundaryConditions
 from elasticity.utils import scale_mesh
 from run_simulation import run_simulation
 
 
-class BoundaryConditions:
-    def __init__(self, width, height, tol):
-        self.width, self.height, self.tol = width, height, tol
-
+class LBracketBoundaryConditions(BoundaryConditions):
     def get_fixed(self):
         width, height, tol = self.width, self.height, self.tol
 
@@ -28,11 +26,9 @@ class BoundaryConditions:
                 return near(x[0], width, tol) and near(x[1], height / 3., tol)
         return [PointLoad()], [Constant((0.0, -3e-1))]
 
-    def get_body_force(self):
-        return Constant((0, 0))
 
 if __name__ == "__main__":
-    bc = BoundaryConditions(1, 1, 5e-2)
+    bc = LBracketBoundaryConditions(1, 1, 5e-2)
 
     # Create the mesh to solve linear elasticity on.
     large_quad = mshr.Polygon([Point(0, 0), Point(1, 0), Point(1, 1),

@@ -1,14 +1,12 @@
 from __future__ import print_function, division
 from fenics import *
 
+from elasticity.boundary_conditions import BoundaryConditions
 from elasticity.utils import scale_mesh
 from run_simulation import run_simulation
 
 
-class BoundaryConditions:
-    def __init__(self, width, height, tol):
-        self.width, self.height, self.tol = width, height, tol
-
+class MBBBoundaryConditions(BoundaryConditions):
     def get_fixed(self):
         width, height, tol = self.width, self.height, self.tol
 
@@ -29,12 +27,9 @@ class BoundaryConditions:
                     near(x[1], height, tol))
         return [PointLoad()], [Constant((0.0, -2e-1))]
 
-    def get_body_force(self):
-        return Constant((0, 0))
-
 if __name__ == "__main__":
     width, height, tol = 600, 100, 5e-2
-    bc = BoundaryConditions(width, height, tol)
+    bc = MBBBoundaryConditions(width, height, tol)
     mesh = Mesh("meshes/bridge.xml")
     scale_mesh(mesh, width, height)
     run_simulation(mesh, bc, "MBB/bridge-1-", E=1e1)
