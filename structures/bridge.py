@@ -30,22 +30,11 @@ class LessTolerantSolver(Solver):
         self.opt.set_maxeval(4000)
         self.opt.set_ftol_rel(0.0001)
 
-# BoundaryConditions = topopt.boundary_conditions.BoundaryConditions
-
-
-class BoundaryConditions(topopt.boundary_conditions.BoundaryConditions):
-    def get_forces(self):
-        # Return the force vector for the problem
-        topx_to_id = np.vectorize(
-            lambda x: xy_to_id(x, 0, self.nelx, self.nely))
-        topx = 2 * topx_to_id(np.arange((self.nelx + 1) // 2)) + 1
-        f = np.zeros((2 * (self.nelx + 1) * (self.nely + 1), 1))
-        f[topx, 0] = -100
-        return f
+BoundaryConditions = topopt.boundary_conditions.BoundaryConditions
 
 
 def main(nelx, nely, volfrac, penal, rmin, ft):
-    print("Minimum compliance problem with OC")
+    print("Minimum compliance problem with MMA")
     print("ndes: {:d} x {:d}".format(nelx, nely))
     print("volfrac: {:g}, rmin: {:g}, penal: {:g}".format(volfrac, rmin, penal))
     print("Filter method: " + ["Sensitivity based", "Density based"][ft])

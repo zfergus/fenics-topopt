@@ -52,7 +52,7 @@ class BoundaryConditions(topopt.boundary_conditions.BoundaryConditions):
 
 
 def main(nelx, nely, volfrac, penal, rmin, ft):
-    print("Minimum compliance problem with OC")
+    print("Minimum compliance problem with MMA")
     print("ndes: {:d} x {:d}".format(nelx, nely))
     print("volfrac: {:g}, rmin: {:g}, penal: {:g}".format(volfrac, rmin, penal))
     print("Filter method: " + ["Sensitivity based", "Density based"][ft])
