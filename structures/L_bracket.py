@@ -1,9 +1,5 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-
-# A 200 LINE TOPOLOGY OPTIMIZATION CODE BY NIELS AAGE AND VILLADS EGEDE
-# JOHANSEN, JANUARY 2013
-# Updated by Niels Aage February 2016
 from __future__ import division
 import sys
 import pdb
