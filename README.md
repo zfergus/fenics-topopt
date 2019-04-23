@@ -16,7 +16,7 @@ Created by Zachary Ferguson and Francis Williams for CSCI-GA.2420: Numerical Met
 #### Presentation
 * <a href="Topology Optimization with FEniCS - Presentation (Zachary Ferguson and Francis Williams).pdf">Topology Optimization with FEniCS - Presentation (Zachary Ferguson and Francis Williams).pdf</a>
 
-## Usage
+<!-- ## Usage -->
 
 ## Results
 
