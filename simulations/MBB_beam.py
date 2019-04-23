@@ -32,4 +32,4 @@ if __name__ == "__main__":
     bc = MBBBoundaryConditions(width, height, tol)
     mesh = Mesh("meshes/bridge.xml")
     scale_mesh(mesh, width, height)
-    run_simulation(mesh, bc, "MBB/bridge-1-", E=1e1)
+    run_simulation(mesh, bc, "MBB/bridge-single-load-", E=1e1)

@@ -30,6 +30,6 @@ class DistributedMBBBoundaryConditions(BoundaryConditions):
 if __name__ == "__main__":
     width, height, tol = 600, 100, 5e-2
     bc = DistributedMBBBoundaryConditions(width, height, tol)
-    mesh = Mesh("meshes/bridge2.xml")
+    mesh = Mesh("meshes/bridge-distributed-load.xml")
     scale_mesh(mesh, width, height)
-    run_simulation(mesh, bc, "MBB/bridge-2-")
+    run_simulation(mesh, bc, "MBB/bridge-distributed-load-")
