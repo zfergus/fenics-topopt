@@ -1,6 +1,6 @@
 # Numerical Methods II Project: Topology Optimization with FEniCS
 
-<p align="center"><img src="images/L-bracket/L-bracket.png"></p>
+<p align="center"><img src="images/L-bracket/FEniCS/L-bracket.png"></p>
 
 **Topology optimization with finite element analysis in FEniCS.**
 
@@ -70,7 +70,7 @@ We use a passive element in the upper right corner to prevent material from fill
 
 **L-bracket boundary consitions:**
 <p align="center">
-<img src="images/L-bracket/L-bracket.svg" width="40%">
+<img src="images/L-bracket/L-bracket-bc.svg" width="40%">
 <br>
 Arrows are force vectors, and striping indicate fixed points.
 </p>
