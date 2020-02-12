@@ -2,11 +2,15 @@
 
 <p align="center"><img src="images/L-bracket/FEniCS/L-bracket.png"></p>
 
-**Topology optimization with finite element analysis in FEniCS.**
+<p align="center"><b>Topology optimization with finite element analysis in FEniCS.</b></p>
+
+**This is a project created for CSCI-GA.2420: Numerical Methods II at New York University. I have since built upon the TopOpt library for my research and have made it publicly available [here](https://github.com/zfergus/topopt). Currently, it does not include any FEniCS functionality, but I hope to add it, eventually.**
 
 #### Abstract
 
 We present an implementation of topology optimization with a linear elasticity solver using [FEniCS](https://fenicsproject.org/). We approach the problem of minimizing compliance using solid isotropic material with penalization (SIMP). We generate an optimal structure given a load condition by optimizing the relative density of each element. To verify our solutions, we perform finite element analysis using FEniCS and conduct physical experimentation using fabricated instances of our results.
+
+**The goal of this project was originally to do topology optimization using FEniCS entirely, but we instead settled for a simple implementation of topology optimization with a secondary elasticity simulation of the results using FEniCS. Using FEniCS in topology optimization enables an easier interface for developing new topology optimization methods. For now, though, we leave that as exciting future work.**
 
 Created by Zachary Ferguson and Francis Williams for CSCI-GA.2420: Numerical Methods II (Spring 2018) at New York University.
 
